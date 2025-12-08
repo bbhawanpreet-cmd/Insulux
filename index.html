@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Insulux - Windows & Doors Services</title>
+    <link rel="insulux" href="img/icon/Logo-Short.jpeg" type="image/x-icon">
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; color: #333; }
         header { background: #0073e6; color: #fff; padding: 60px 20px; text-align: center; }
@@ -21,16 +22,28 @@
         button { background: #0073e6; color: #fff; padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
         footer { background: #333; color: #fff; text-align: center; padding: 30px 20px; }
         footer a { color: #ff9900; text-decoration: none; }
+        .headerPic {
+            width: 50px;
+            height: 50px;
+            vertical-align: middle;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
         @media (max-width: 768px) {
             .service-list, .reason-list { flex-direction: column; gap: 20px; }
         }
     </style>
+    <script>
+        
+
+
+    </script>
 </head>
 <body>
 
 <header>
-    <h1>Insulux</h1>
-    <p>Quality Windows & Doors Services at the Best Price in Canada</p>
+    <h1><img src="Img/ICON/Logo-Short.jpeg" title="" class="headerPic"/> Insulux</h1>
+    <p>Quality Windows & Doors Services at the Best Price in Calgary and nearby area</p>
     <a href="#contact" class="btn">Get a Free Quote Today</a>
 </header>
 
@@ -56,7 +69,8 @@
 
 <section id="contact" class="contact">
     <h2>Get Your Free Estimate Today!</h2>
-    <form action="send-mail.php" method="POST">
+   <!--<form action="send-mail.php" method="POST" id="contactForm">--> 
+    <form  id="contactForm">
         <input type="text" name="name" placeholder="Your Name" required>
         <input type="email" name="email" placeholder="Your Email" required>
         <input type="tel" name="phone" placeholder="Your Phone" required>
@@ -66,13 +80,114 @@
         <input type="text" name="website" style="display:none">
 
         <button type="submit">Request a Quote</button>
+        <!-- Honeypot -->
+    <input type="text" name="company" style="display:none">
+
+    <!-- Human check -->
+    <label style="display:block; margin-top:10px;">What is 3 + 4?</label>
+    <input type="text" id="humanCheck" required>
+
     </form>
 </section>
 
 <footer>
     <p>&copy; 2025 Insulux | <a href="mailto:insuluxcontracting@gmail.com">insuluxcontracting@gmail.com</a> | Phone: +1 825-734-6881</p>
-    <p>Affordable Windows & Doors Services Across Canada</p>
+    <p>Affordable Windows & Doors Services Across Calgary and nearby area</p>
 </footer>
+<!-- Spinner -->
+<div id="loader" style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.4);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;">
+    <div style="
+        width:70px;
+        height:70px;
+        border:8px solid #eee;
+        border-top:8px solid #0073e6;
+        border-radius:50%;
+        animation:spin 1s linear infinite;"></div>
+</div>
+
+<!-- Alerts -->
+<div id="msgSuccess" style="
+    display:none;
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#28a745;
+    color:#fff;
+    padding:15px 20px;
+    border-radius:6px;
+    font-weight:bold;">
+    ✅ Message sent successfully!
+</div>
+
+<div id="msgError" style="
+    display:none;
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#dc3545;
+    color:#fff;
+    padding:15px 20px;
+    border-radius:6px;
+    font-weight:bold;">
+    ❌ Error sending message. Try later.
+</div>
+
+<style>
+@keyframes spin { to { transform:rotate(360deg); } }
+</style>
+<script>
+const form = document.getElementById("contactForm");
+const loader = document.getElementById("loader");
+const successMsg = document.getElementById("msgSuccess");
+const errorMsg = document.getElementById("msgError");
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    // Honeypot check
+    if (form.company.value !== "") return;
+
+    // Human test
+    if (document.getElementById("humanCheck").value !== "7") {
+        alert("Please answer the human check correctly.");
+        return;
+    }
+
+    loader.style.display = "flex";
+
+    const data = new FormData(form);
+
+    fetch("https://formsubmit.co/insuluxcontracting@gmail.com", {
+        method: "POST",
+        body: data,
+        headers: {
+            "Accept": "application/json"
+        }
+    })
+    .then(response => {
+        loader.style.display = "none";
+        if (response.ok) {
+            form.reset();
+            successMsg.style.display = "block";
+            setTimeout(() => successMsg.style.display = "none", 4000);
+        } else {
+            throw new Error("Send failed");
+        }
+    })
+    .catch(() => {
+        loader.style.display = "none";
+        errorMsg.style.display = "block";
+        setTimeout(() => errorMsg.style.display = "none", 4000);
+    });
+});
+</script>
 
 </body>
 </html>
